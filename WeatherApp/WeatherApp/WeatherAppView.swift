@@ -73,7 +73,9 @@ class WeatherAppView: UIViewController {
     }
     
     func setDataOfWeatherApp(){
-        latLongErrorHandling()
+        if latLongErrorHandling(){
+            return
+        }
         miniView.isHidden = true
         fetchWeatherData {[weak self](WeatherInfo) in
             DispatchQueue.main.async{
@@ -96,13 +98,14 @@ class WeatherAppView: UIViewController {
             
         }
     }
-    func latLongErrorHandling(){
+    func latLongErrorHandling() -> Bool{
         if lat == nil || long == nil {
             let ac = UIAlertController(title: self.title, message: "Lattitude And longitude data cannot Be fetched. Please Try Agin", preferredStyle: .alert)
                     ac.addAction(UIAlertAction(title: "Ok", style: .default))
             self.present(ac, animated: true)
-            return
+            return true
         }
+        return false
     }
     func processTimeAndDate(_ date: String?) -> String {
         let dateFormatterGet = DateFormatter()
